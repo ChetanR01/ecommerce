@@ -24,6 +24,7 @@
                             <table class="table table-bordered">
                                 <thead class="thead-dark">
                                     <tr>
+                                        <th>Date</th>
                                         <th>Order Id</th>
                                         <th>Orders Items</th>
                                         <th>Order Price</th>
@@ -33,6 +34,7 @@
                                 <tbody class="align-middle">
                                     {% for order in order_list %}
                                     <tr>
+                                        <td>{{order.date}}</td>
                                         <td>{{order.order_id}}</td>
                                         <td>
                                             <ol>

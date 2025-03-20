@@ -17,8 +17,12 @@ def signup(request):
         password = request.POST['password']
         full_name = request.POST['full_name']
 
-        first_name = full_name.split(' ')[0]
-        last_name = full_name.split(' ')[1]
+        if len(full_name.split(" ")) > 1:
+            first_name = full_name.split(' ')[0]
+            last_name = full_name.split(' ')[1]
+        else:
+            first_name = full_name
+            last_name = ''
 
         users = User.objects.create_user(username=username, password=password, email=username, first_name=first_name, last_name=last_name)
 
@@ -148,9 +152,21 @@ def orders(request):
     for order in orders:
         if temp_order_id != order.order_id:
             temp_order_id = order.order_id
-            order_list.append({"order_id":order.order_id, 'order_price':total_order_price, 'status':order.status})
+            total_order_price+= order.product.price
+            order_list.append({"order_id":order.order_id, 'order_price':total_order_price, 'status':order.status, 'date':order.date})
         else:
             total_order_price+= order.product.price
-            order_list[-1] = {"order_id":order.order_id, 'order_price':total_order_price, 'status':order.status}
+            order_list[-1] = {"order_id":order.order_id, 'order_price':total_order_price, 'status':order.status, 'date':order.date}
 
     return render(request, 'orders.html', {"order_list":order_list, "orders":orders})
+
+from django.db.models import Q
+def search_product(request):
+    if request.method =='POST':
+        search_inp = request.POST['search-bar']
+
+        products = Products.objects.filter(Q(name__icontains= search_inp) | Q (brand__icontains = search_inp)| Q (desc__icontains = search_inp)| Q (specification__icontains = search_inp)| Q (tags__icontains = search_inp))
+        categories = Category.objects.all()
+        return render(request, 'product-list.html', {'products': products, 'categories':categories})
+    
+    return redirect('/product-list')

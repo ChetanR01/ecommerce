@@ -20,6 +20,8 @@ urlpatterns = [
     path('product-details/<int:id>', views.product_details, name='product-deatils'),
     path('product-list', views.product_list, name='product-list'),
     path('category-product-list/<str:category>', views.category_product_list, name='category-product-list'),
+
+    path('search-product', views.search_product, name='search-product'),
     
 
 ]
